@@ -1,0 +1,96 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Home.master.cs" Inherits="WebBasic.Home" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Basic WebApplication</title>
+    <link href="Themes/style.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <script>
+        function click() {
+            alert("Hello");
+        }
+    </script>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div id="menutop">
+        <div id="menu">
+            <ul>
+                <li><a href="Index.aspx">Trang chủ</a></li>
+                <asp:Repeater ID="rpBanTin" runat="server">
+                    <ItemTemplate>                       
+                        <li>                            
+                            <a href="BanTin.aspx?IDBanTin=<%# Eval("IDBanTin") %>"><%# Eval("TieuDe") %></a>
+                        </li>                         
+                    </ItemTemplate>
+                </asp:Repeater>
+                <%
+                    if ((Boolean)Session["admin"] == false)
+                    {
+                        %>
+                        <li><a href="Login.aspx">Đăng Nhập</a></li>                        
+                <%
+                    } else
+                        {
+                        %>
+                            <li><a><%Response.Write("Welcome, " + Session["user"]);%></a> <a href="Logout.aspx">Thoát</a></li>
+                            <li><a href="Post.aspx">Thêm bài mới</a></li>  
+                            <%--<li><a href="Register.aspx">Thêm tài khoản</a></li>--%>                          
+                <%
+                        }
+                     %>         
+            </ul>
+        </div>
+    </div>
+    <div id="maincontent">
+        <div id="rightcontent">
+            <h1>Tiêu đề nội dung bên phải</h1>
+            <div id="ndright">
+                <h2>Thời tiết</h2>
+                <%--dong ho he thong--%>
+                <asp:ScriptManager ID="ScriptManager" runat="server" />
+                <asp:UpdatePanel ID="up2" runat="server">
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="Timer2" EventName="Tick" />
+                    </Triggers>
+                    <ContentTemplate>
+                    <asp:Timer ID="Timer2" Interval="1000" runat="server" OnTick="Timer2_Tick" />
+                        <asp:Label ID="Label1" runat="server"></asp:Label>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+                <div id="Weather">
+                    <iframe src="http://thienduongweb.com/tool/weather/?r=1&w=1&g=1&col=1&d=0" height="582"></iframe> 
+                </div>
+                <h2>Quảng cáo</h2>
+                <div id="Ads">
+                    <%--<asp:ScriptManager ID="ScriptManager1" runat="server" />--%>
+                    <asp:UpdatePanel ID="up1" runat="server">
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="Timer1" EventName="Tick" />
+                        </Triggers>
+                        <ContentTemplate>
+                        <asp:Timer ID="Timer1" Interval="3000" runat="server" />
+                            <asp:AdRotator ID="AdRotator1" runat="server" AdvertisementFile="~/App_Data/DBFile.xml" Target="_blank" width="100%"/>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>                
+            </div>
+        </div>
+        <div id="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+            </asp:ContentPlaceHolder>
+        </div>                
+    </div>
+    <div id="footer">
+        <div id="ndfooter">
+            Copyright: Nguyễn Duy Phương.
+            Địa chỉ: 96, Định Công, Hà Nội
+        </div>
+    </div>
+    </form>
+</body>
+</html>
